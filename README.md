@@ -1,2 +1,2 @@
-# invert_image
-Invert dark image and add treshold for colors too light to be converted to white (for printing)
+# image_convert
+Invert image and/or set threshold to force light colors to white of dark colors to black
