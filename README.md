@@ -6,27 +6,28 @@ dark images to light images with white backgrounds
 to save ink when I print them.  Best for dark mode apps
 with text.
 
-*syntax*: python image_convert.py [ [ -<commands> ] <filenames> ]+
+### syntax
+       python image_convert.py [ [ -commands ] filenames ]+
 
-        *filenames* - space-separated and/or wildcarded filenames
-        *commands*  - comma-separated list (no embedded spaces) of commands
+        filenames - space-separated and/or wildcarded filenames
+        commands  - comma-separated list (no embedded spaces) of commands
                     to apply to the following files. (details below)
 
-*details*:
-    *commands*:
-        *i*         - invert the image
-        *tNNN*      - threshold for low intensity.  'NNN' is a number from 0
+### details
+    commands:
+        i         - invert the image
+        tNNN      - threshold for low intensity.  'NNN' is a number from 0
                     to 255. For example if 'NNN' were 32, then all pixels
                     which had an intensity of less than or equal to 32
                     would be set to 0 (black).
-        *bHHHHHH*   - background color.  'HHHHHH' is a triplet of hexadecimal
+        bHHHHHH   - background color.  'HHHHHH' is a triplet of hexadecimal
                     characters representing the RGB values of the
                     background.  For example: b000000 would be black and
                     bFFFFFF would be white.  This is used if it is
                     necessary to handle (semi-)transparency.
-        *h*,*?*       - prints this text
+        h,?       - prints this text
 
-*examples*:
+### examples
 
     * To invert an image
     python image_convert.py -i image.png
@@ -43,5 +44,5 @@ with text.
     * To invert all images
     python image_convert.py - i *.png *.jpg
 
-*note*:
+### note
     Only tested for PNG and JPG files. Converted files lose their transparency.
