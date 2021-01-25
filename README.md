@@ -24,7 +24,6 @@ python image_convert.py [ [ -commands ] filenames ]+
 | --------- | ------------------------------------------------------------ |
 | i         | invert the image                                             |
 | t*NNN*    | threshold for low intensity.  'NNN' is a number from 0 to 255. For example if *NNN* were 32, then all pixels which had an intensity of less than or equal to 32 would be set to 0 (black). |
-| b*HHHHHH* | background color.  *HHHHHH* is a triplet of hexadecimal characters representing the RGB values of the background.  For example: b000000 would be black and bFFFFFF would be white.  This is used if it is necessary to handle (semi-)transparency. |
 | h,?       | prints help text                                             |
 
 
@@ -48,4 +47,4 @@ python image_convert.py [ [ -commands ] filenames ]+
 
 ### Note
 
-Only tested for PNG and JPG files. Converted files lose their transparency.
+Only tested for PNG and JPG files.

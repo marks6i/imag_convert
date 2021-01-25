@@ -4,10 +4,10 @@ from PIL import Image, ImageOps
 import sys
 import os
 from glob import glob
+from operator import itemgetter
 
 
 # global state variables
-background_color = (255, 255, 255)
 threshold = 0
 
 def print_help():
@@ -31,11 +31,6 @@ details:
                     to 255. For example if 'NNN' were 32, then all pixels
                     which had an intensity of less than or equal to 32
                     would be set to 0 (black).
-        bHHHHHH   - background color.  'HHHHHH' is a triplet of hexadecimal
-                    characters representing the RGB values of the
-                    background.  For example: b000000 would be black and
-                    bFFFFFF would be white.  This is used if it is
-                    necessary to handle (semi-)transparency.
         h,?       - prints this text
 
 examples:
@@ -56,7 +51,7 @@ examples:
     python image_convert.py - i *.png *.jpg
 
 note:
-    Only tested for PNG and JPG files. Converted files lose their transparency.
+    Only tested for PNG and JPG files.
 ''')
 
 
@@ -87,14 +82,6 @@ def set_command(cmds):
                 print(f"Error: command '{command}' only takes an integer argument.", file = sys.stderr)
                 exit(3)
 
-        elif command == 'b':
-            try:
-                rgb = tuple(int(cmd_arg[i:i+2], 16) for i in (0, 2, 4))
-                cmd_list.append([command, rgb])
-            except ValueError as ve:
-                print(f"Error: command '{command}' only takes 3 hexdigits as an argument.", file = sys.stderr)
-                exit(4)
-
         elif command == 'h' or command == '?': # help screen
             print_help()
 
@@ -105,25 +92,16 @@ def set_command(cmds):
     return cmd_list
 
 
-def alpha_to_color(image, color=(255, 255, 255)):
-    """Alpha composite an RGBA Image with a specified color.
-
-    Source: http://stackoverflow.com/a/9459208/284318
-
-    Keyword Arguments:
-    image -- PIL RGBA Image object
-    color -- Tuple r, g, b (default 255, 255, 255)
-
-    """
-    image.load()  # needed for split()
-    background = Image.new('RGB', image.size, color)
-    background.paste(image, mask=image.split()[3])  # 3 is the alpha channel
-    return background
-    
-    
 def invert_image(im):
     if im.mode == 'RGBA':
-        im = alpha_to_color(im, background_color)
+        r, g, b, a = itemgetter(0, 1, 2, 3)(im.split())
+        im = Image.merge('RGB', (r, g, b))
+
+        im = ImageOps.invert(im)
+
+        r, g, b    = itemgetter(0, 1, 2)(im.split())
+        return Image.merge('RGBA', (r, g, b, a))
+
     return ImageOps.invert(im)
 
 
@@ -137,12 +115,6 @@ def set_threshold(im, level):
     global threshold
     threshold = level
     return im.point(_threshold)
-
-
-def set_background(color):
-    global background_color
-    background_color = color
-    return background_color
 
 
 # ============ main program ================
@@ -172,9 +144,6 @@ for arg in sys.argv[1:]:
 
             elif command == 't': # set threshold
                 im = set_threshold(im, cmd_arg)
-
-            elif command == 'b': # set background for RGBA images
-                set_background(cmd_arg)
 
         os.rename(filename, filename+'.bak')
         im.save(filename, original_format)
