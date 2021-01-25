@@ -43,7 +43,7 @@ python image_convert.py [ [ -commands ] filenames ]+
     python image_convert.py -i image1.png -t32 image2.png
     
     * To invert all images
-    python image_convert.py - i *.png *.jpg
+    python image_convert.py -i *.png *.jpg
 
 ### Note
 
